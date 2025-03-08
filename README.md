@@ -7,7 +7,7 @@ SaoML Flow Control 8.0 Unauthorized Installation Script
 After Saozhu ran away, this project stopped being updated. It's something from a few years ago, provided only for learning and交流.
 
 # Installation Script
-<pre>wget -O saoml5 https://github.com/Lena-Logic/SaoML/blob/main/saoml5;chmod +x saoml5;./saoml5</pre>
+<pre>wget -O saoml5 https://raw.githubusercontent.com/Lena-Logic/SaoML/refs/heads/main/saoml5;chmod +x saoml5;./saoml5</pre>
 
 # Included Versions
 It includes the basic and advanced versions, both version 7 and 8 can be installed.
