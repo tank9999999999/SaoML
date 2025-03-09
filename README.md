@@ -4,7 +4,7 @@
 SaoML Flow Control 8.0 Unauthorized Installation Script
 
 # Related Information
-After Saozhu ran away, this project stopped being updated. It's something from a few years ago, provided only for learning and交流.
+After Saozhu ran away, this project stopped being updated. It's something from a few years ago, provided only for learning and.
 
 # Installation Script
 <pre>wget -O saoml5 https://raw.githubusercontent.com/Lena-Logic/SaoML/refs/heads/main/saoml5;chmod +x saoml5;./saoml5</pre>
