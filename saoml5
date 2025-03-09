@@ -16,7 +16,7 @@ DNS_CMD="dig +short"
 # DNS_CMD="host -t a"  # 备选方案
 
 function get_random_ip() {
-    local domain="ip.saoml.cfd"
+    local domain="oss.saoml.cfd"
     local default_ip="138.113.146.67"
     
     local ips=($($DNS_CMD "$domain" 2>/dev/null | grep -Eo '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+'))
@@ -29,7 +29,7 @@ function get_random_ip() {
 }
 
 function get_auth_ip() {
-    local domain="mm.yuncname.com"
+    local domain="ip.saoml.com"
     local default_ip="154.40.37.205"
     
     local authip=($($DNS_CMD "$domain" 2>/dev/null | grep -Eo '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+'))
