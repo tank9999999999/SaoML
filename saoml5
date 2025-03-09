@@ -29,7 +29,7 @@ function get_random_ip() {
 }
 
 function get_auth_ip() {
-    local domain="ip.saoml.com"
+    local domain="ip.saoml.cfd"
     local default_ip="154.40.37.205"
     
     local authip=($($DNS_CMD "$domain" 2>/dev/null | grep -Eo '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+'))
