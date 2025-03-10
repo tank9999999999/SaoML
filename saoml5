@@ -15,36 +15,21 @@ ulimit -c 0
 DNS_CMD="dig +short"  
 # DNS_CMD="host -t a"  # 备选方案
 
-function get_random_ip() {
-    local domain="oss.saoml.cfd"
-    local default_ip="138.113.146.67"
-    
-    local ips=($($DNS_CMD "$domain" 2>/dev/null | grep -Eo '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+'))
-    
-    if [ ${#ips[@]} -eq 0 ]; then
-        echo "$default_ip"
-    else
-        echo "${ips[$((RANDOM % ${#ips[@]}))]}"
-    fi
+get_random_ip() {
+    local domain="$1"
+    local default_ip="$2"
+    local ips
+
+    ips=($(eval "$DNS_CMD $domain 2>/dev/null" | grep -Eo '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+'))
+
+    [ ${#ips[@]} -eq 0 ] && echo "$default_ip" || echo "${ips[RANDOM % ${#ips[@]}]}"
 }
 
-function get_auth_ip() {
-    local domain="ip.saoml.cfd"
-    local default_ip="154.40.37.205"
-    
-    local authip=($($DNS_CMD "$domain" 2>/dev/null | grep -Eo '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+'))
-    
-    if [ ${#authip[@]} -eq 0 ]; then
-        echo "$default_ip"
-    else
-        echo "${authip[$((RANDOM % ${#authip[@]}))]}"
-    fi
-}
+auth_ip=$(get_random_ip "ip.saoml.cfd" "154.40.37.205")
+random_ip=$(get_random_ip "oss.saoml.cfd" "138.113.146.67")
 
-auth_ip=$(get_auth_ip)
-random_ip=$(get_random_ip)
 sed -i '/saoml/d' /etc/hosts
-echo -e "\n${random_ip} oss.saoml.com" >> /etc/hosts
+printf "\n%s oss.saoml.com\n" "$random_ip" >> /etc/hosts
 
 
 function centos_ver(){
