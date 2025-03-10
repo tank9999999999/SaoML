@@ -139,7 +139,7 @@ fi
 
 #6.0
 if [[ $install == 2 ]];then
-154.40.37.205iptables -t nat -A OUTPUT -d 101.35.108.196 -j DNAT --to-destination "$auth_ip"
+iptables -t nat -A OUTPUT -d 101.35.108.196 -j DNAT --to-destination "$auth_ip"
 	if [ -f "/bin/saoml" ];then
 		size=`ls -l /bin/saoml | awk '{print $5}'`
 		if [[ $size == 2326326 ]];then
