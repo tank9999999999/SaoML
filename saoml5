@@ -32,7 +32,7 @@ sed -i '/saoml/d' /etc/hosts
 printf "\n%s oss.saoml.com\n" "$random_ip" >> /etc/hosts
 
 
-function centos_ver(){
+function debian_ver(){
 	root=`whoami | tr -d '\n'`
 	if [ $root == "root" ];then
 		echo -e "\033[33m执行权限:\033[0m \033[34m检测通过\033[0m"
@@ -42,18 +42,18 @@ function centos_ver(){
 	fi
 	if [ -f "/etc/os-release" ]; then
 		var=`cat /etc/os-release | awk -F'[=\"]+' '/^VERSION_ID=/ {print $2}'`
-		if [ $var == "7" ];then 
+		if [ $var == "10" ] || [ $var == "11" ];then 
 			echo -e "\033[33m系统版本:\033[0m \033[34m检测通过\033[0m"
 		else
-			echo -e "\033[33m系统版本:\033[0m \033[34m当前服务器系统不支持SaoML流控,请重装系统后重新运行此脚本,系统为：CentOS7.x,优先选择7.3、7.2\033[0m"
+			echo -e "\033[33m系统版本:\033[0m \033[34m当前服务器系统不支持SaoML流控,请重装系统后重新运行此脚本,系统为：Debian 10.x 或 11.x\033[0m"
 			exit; 
 		fi
 	else
-		echo -e "\033[33m系统版本:\033[0m \033[34m当前服务器系统不支持SaoML流控,请重装系统后重新运行此脚本,系统为：CentOS7.x,优先选择7.3、7.2\033[0m"
+		echo -e "\033[33m系统版本:\033[0m \033[34m当前服务器系统不支持SaoML流控,请重装系统后重新运行此脚本,系统为：Debian 10.x 或 11.x\033[0m"
 		exit;
 	fi
 }
-centos_ver
+debian_ver
 sleep 1
 clear
 echo "================================================"
@@ -169,14 +169,13 @@ net.core.wmem_default=1048576' >/etc/sysctl.conf
 	sysctl -p /etc/sysctl.conf >/dev/null 2>&1
 	echo -n "请输入流控现在使用端口："
 	read port
-	systemctl stop firewalld.service >/dev/null 2>&1
-	systemctl disable firewalld.service >/dev/null 2>&1
-	systemctl stop iptables.service >/dev/null 2>&1
-	yum -y install iptables iptables-services >/dev/null 2>&1
-	systemctl start iptables.service >/dev/null 2>&1
+	service iptables stop >/dev/null 2>&1
+	service iptables disable >/dev/null 2>&1
+	apt-get install -y iptables >/dev/null 2>&1
+	service iptables start >/dev/null 2>&1
 	iptables -F
 	iptables -F -t nat
-	service iptables save
+	iptables-save > /etc/iptables/rules.v4
 	iptables -A INPUT -s 127.0.0.1/32  -j ACCEPT
 	iptables -A INPUT -d 127.0.0.1/32  -j ACCEPT
 	iptables -A INPUT -p tcp -m tcp --dport 22 -j ACCEPT
@@ -244,11 +243,10 @@ net.core.wmem_default=1048576' >/etc/sysctl.conf
 	iptables -t nat -A POSTROUTING -j MASQUERADE
 	iptables -A INPUT -p icmp --icmp-type echo-request -j ACCEPT
 	iptables -A OUTPUT -p icmp --icmp-type echo-reply -j ACCEPT
-	service iptables save
-	systemctl restart iptables.service
-	systemctl enable iptables.service
+	iptables-save > /etc/iptables/rules.v4
+	service iptables restart
 	echo "重置完毕"
-	exit 0
+	exit 
 fi
 
 if [[ $install == 4 ]];then
